@@ -123,7 +123,7 @@ def create_model(session, forward_only, model_path, config=TestConfig()):
         forward_only=forward_only,
         config=config)
     ckpt = tf.train.get_checkpoint_state(model_path)
-    if ckpt and tf.gfile.Exists(ckpt.model_checkpoint_path):
+    if ckpt and ckpt.model_checkpoint_path:
         print("Reading model parameters from %s" % ckpt.model_checkpoint_path)
         model.saver.restore(session, ckpt.model_checkpoint_path)
     else:
@@ -421,9 +421,7 @@ def main(_):
         with tf.Session() as session:
             model = create_model(session, True, FLAGS.model_path, config=config)
             print("Loaded model. Beginning decoding.")
-            decodings = decode(session, model=model, data_reader=data_reader,
-                               data_to_decode=data_reader.read_tokens(
-                                   FLAGS.test_path), verbose=False)
+            decodings = decode(session, model=model, data_reader=data_reader, data_to_decode=data_reader.read_tokens(FLAGS.test_path), verbose=False)
             # Write the decoded tokens to stdout.
             for tokens in decodings:
                 print(" ".join(tokens))
