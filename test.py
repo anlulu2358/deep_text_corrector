@@ -35,4 +35,25 @@ with open(os.path.join(root_data_path, "token_to_id.pickle"), "wb") as f:
 sess = tf.InteractiveSession()
 model = create_model(sess, True, model_path, config=config)
 
-decoded = decode_sentence(sess, model, data_reader, "they not do", corrective_tokens=corrective_tokens)
+decoded = decode_sentence(sess, model, data_reader, "i has a few question", corrective_tokens=corrective_tokens)
+
+decoded = decode_sentence(sess, model, data_reader,
+                          "did n't you say that they 're going to develop this revolutionary new thing ...",
+                          corrective_tokens=corrective_tokens)
+
+decode_sentence(sess, model, data_reader, "kvothe went to market", corrective_tokens=corrective_tokens, verbose=False)
+
+decode_sentence(sess, model, data_reader, "blablahblah and bladdddd went to market", corrective_tokens=corrective_tokens,
+                verbose=False)
+decode_sentence(sess, model, data_reader, "do you have book", corrective_tokens=corrective_tokens, verbose=False)
+
+# 4 layers, 40k steps
+errors = evaluate_accuracy(sess, model, data_reader, corrective_tokens, test_path)#, max_samples=1000)
+# 4 layers, 30k steps
+errors = evaluate_accuracy(sess, model, data_reader, corrective_tokens, test_path)#, max_samples=1000)
+# 4 layers, 20k steps
+errors = evaluate_accuracy(sess, model, data_reader, corrective_tokens, test_path)#, max_samples=1000)
+errors = evaluate_accuracy(sess, model, data_reader, corrective_tokens, test_path)#, max_samples=1000)
+for decoding, target in errors:
+    print("Decoding: " + " ".join(decoding))
+    print("Target:   " + " ".join(target) + "\n")                          
